@@ -50,8 +50,8 @@ HTML
 
       file1 = File.join(dir, 'section_0.html')
       file2 = File.join(dir, 'section_1.html')
-      File.exists?(file1).should be_true
-      File.exists?(file2).should be_true
+      File.exists?(file1).should be true
+      File.exists?(file2).should be true
       File.read(file1).should == @easy.sections[0][1]
       File.read(file2).should == @easy.sections[1][1]
 
