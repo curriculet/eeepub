@@ -205,6 +205,40 @@ describe "EeePub::OPF" do
       spine[1].attribute('idref').value.should == 'b'
     end
   end
+  
+  context 'specify custom meta' do
+    before do
+      @opf.cover = 'cover.jpg'
+      @opf.meta = [
+        {name: "SSTS", content: "inner,space"},
+        {name: "SSTS2", content: "inner,"},
+        {name: "Custom Meta Name 1", content: "Weird content with a couple of curly braces{} and single quotes'' and double quotes \"\" "},
+        {bad_meta_entry: "This shold not export but not cause", content: "an error"}
+      ]
+    end
+    
+    it 'should export as xml' do
+      doc  = Nokogiri::XML(@opf.to_xml)
+      
+      cover = doc.xpath('//xmlns:meta[@name="cover"]')
+      cover.should_not be_nil
+      cover.attribute('content').value.should eq "cover.jpg"
+      
+      ssts = doc.xpath('//xmlns:meta[@name="SSTS"]')
+      ssts.should_not be_nil
+      ssts.attribute('content').value.should eq "inner,space"
+    
+      ssts2 = doc.xpath('//xmlns:meta[@name="SSTS2"]')
+      ssts2.should_not be_nil
+      ssts2.attribute('content').value.should eq "inner,"
+    
+      custom = doc.xpath('//xmlns:meta[@name="Custom Meta Name 1"]')
+      custom.should_not be_nil
+      custom.attribute('content').value.should match /Weird content with a couple of curly braces{} and single quotes/
+    
+    end    
+  end
+  
 
   context 'specify manifest as Hash' do
     before do

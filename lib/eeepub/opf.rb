@@ -17,7 +17,8 @@ module EeePub
                   :cover,
                   :source,
                   :ncx,
-                  :toc
+                  :toc,
+                  :meta
 
     default_value :toc, 'ncx'
     default_value :unique_identifier, 'BookId'
@@ -39,7 +40,8 @@ module EeePub
         @identifier
       end
     end
-
+    
+  
     def spine
       @spine ||
         complete_manifest.
@@ -86,6 +88,14 @@ module EeePub
           end
         end
         builder.meta(:name => 'cover', :content => self.cover) if self.cover
+        
+        
+        meta.each do |m|
+          next unless m.is_a?(Hash)
+          next if m[:name].nil? || m[:content].nil?
+          builder.meta(:name => m[:name], :content => m[:content] )
+        end unless meta.nil?
+        
       end
     end
 

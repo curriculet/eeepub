@@ -39,7 +39,8 @@ module EeePub
       :subject,
       :description,
       :rights,
-      :relation
+      :relation,
+      :meta
     ].each do |name|
       class_eval <<-DELIM
         def #{name}(value)
@@ -126,6 +127,7 @@ module EeePub
         :title => @titles,
         :unique_identifier => @uid,
         :identifier => @identifiers,
+        :meta => @metas,
         :creator => @creators,
         :publisher => @publishers,
         :date => @dates,
